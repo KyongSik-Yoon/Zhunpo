@@ -51,6 +51,9 @@ EOF
 install() {
     # Store scripts in SCRIPTS_DIR.
     cp src/* $SCRIPT_DIR
+    
+    # Make scripts executable
+    chmod +x $SCRIPT_DIR/*.sh
 
     # Add sourcing for shunpo_cmd (overwrite).
     source_rc_line="source $SHUNPO_CMD"

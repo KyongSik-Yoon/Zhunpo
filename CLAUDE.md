@@ -14,7 +14,8 @@ Shunpo is a minimalist shell tool (compatible with both bash and zsh) for fast d
 ## Common Commands
 
 ### Development and Testing
-- **Run tests**: `bats tests/test_bookmarks.bats tests/test_navigation.bats`
+- **Run tests (auto-detect shell)**: `./run_tests.sh`
+- **Run tests manually**: `bats tests/test_bookmarks.bats tests/test_navigation.bats`
 - **Install locally (bash)**: `./install.sh && source ~/.bashrc`
 - **Install locally (zsh)**: `./install.sh && source ~/.zshrc`
 - **Uninstall**: `./uninstall.sh`
@@ -45,7 +46,15 @@ Each command (sb, sg, sr, etc.) is a separate script that sources `functions.sh`
 
 ## Testing
 
-Tests use the BATS framework and create isolated environments in `/tmp/shunpo_test/`. Key test utilities:
+Tests use the BATS framework and create isolated environments in `/tmp/shunpo_test/`. 
+
+### Shell Compatibility
+- Tests automatically detect and work with both bash and zsh
+- `run_tests.sh` provides shell-aware test execution
+- Test setup sources appropriate RC files (.bashrc or .zshrc)
+
+### Key Test Utilities
 - `setup_env()`: Creates test HOME and XDG_DATA_HOME directories
 - `make_directories()`: Creates predictable directory structures for testing
+- `cleanup_env()`: Cleans up both bash and zsh RC files
 - Tests cover installation, bookmarking, navigation, and error handling

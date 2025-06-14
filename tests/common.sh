@@ -1,40 +1,55 @@
 #!/usr/bin/env bash
 
-if [[ "$(uname)" == "Darwin" ]]; then
-    SHUNPO_TEST_DIR="/private/tmp/shunpo_test"
+# Detect shell for test compatibility
+if [ -n "$ZSH_VERSION" ]; then
+    SHELL_RC_FILE=".zshrc"
 else
-    SHUNPO_TEST_DIR="/tmp/shunpo_test"
+    SHELL_RC_FILE=".bashrc"
 fi
 
-function setup_env {
+# Use current directory for testing
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]:-$0}")" && pwd)"
+# Normalize the path to avoid ../test_temp vs test_temp issues
+SHUNPO_TEST_DIR="$(cd "$SCRIPT_DIR/.." && pwd)/test_temp"
+
+setup_env() {
+    # Clean up any existing test directory
+    rm -rf "$SHUNPO_TEST_DIR"
+    
+    # Also clean up any Shunpo installation from previous tests
+    unset SHUNPO_DIR
+    
+    # Create test environment in current project
     HOME=${SHUNPO_TEST_DIR}/home
-    mkdir -p $HOME
+    mkdir -p "$HOME"
     XDG_DATA_HOME=${SHUNPO_TEST_DIR}/home/.local/share
-    mkdir -p $XDG_DATA_HOME
+    mkdir -p "$XDG_DATA_HOME"
+    
+    # Export for subprocesses
+    export HOME
+    export XDG_DATA_HOME
+    
+    # Ensure we start in the test directory
+    cd "$SHUNPO_TEST_DIR"
 }
 
-function cleanup_env {
-    rm $SHUNPO_TEST_DIR/home/.bashrc
-    rm $SHUNPO_TEST_DIR/home/.bashrc$
-
-    if [ -d "${SHUNPO_TEST_DIR}/home" ]; then
-        rmdir ${SHUNPO_TEST_DIR}/home/
-    fi
-
+cleanup_env() {
+    # Clean up entire test directory
     if [ -d "${SHUNPO_TEST_DIR}" ]; then
-        find ${SHUNPO_TEST_DIR} -type d -empty -delete
-        rmdir $SHUNPO_TEST_DIR
+        rm -rf "${SHUNPO_TEST_DIR}"
     fi
 }
 
 make_directories() {
     # Make directory structure.
+    local should_bookmark=${1:-0}
     local depth=4
     local width=3
+    
+    # Start from SHUNPO_TEST_DIR
+    cd "$SHUNPO_TEST_DIR"
+    
     for i in $(seq 1 $depth); do
-        if [[ $1 -eq 1 ]]; then
-            run sb >/dev/null
-        fi
         mkdir -p "$i"
         if [[ $i -ne 1 ]]; then
             for j in $(seq 1 $width); do
@@ -42,10 +57,19 @@ make_directories() {
             done
         fi
         cd "$i"
+        
+        # Add bookmark if requested
+        if [[ $should_bookmark -eq 1 ]]; then
+            sb >/dev/null 2>&1
+        fi
     done
 }
 
 get_num_bookmarks() {
     SHUNPO_BOOKMARKS_FILE="${XDG_DATA_HOME:-$HOME/.local/share}/shunpo/.shunpo_bookmarks"
-    echo $(wc -l <$SHUNPO_BOOKMARKS_FILE | tr -d '[:space:]')
+    if [ -f "$SHUNPO_BOOKMARKS_FILE" ]; then
+        echo $(wc -l <"$SHUNPO_BOOKMARKS_FILE" | tr -d '[:space:]')
+    else
+        echo 0
+    fi
 }

@@ -68,6 +68,23 @@ Uninstalling
 ----
 Run `uninstall.sh`
 
+## Testing
+
+Shunpo includes comprehensive tests that work with both Bash and Zsh:
+
+```bash
+# Run tests with automatic shell detection
+./run_tests.sh
+
+# Or run tests manually with BATS
+bats tests/test_bookmarks.bats tests/test_navigation.bats
+```
+
+**Requirements**: BATS (Bash Automated Testing System)
+- Ubuntu/Debian: `sudo apt-get install bats`
+- macOS: `brew install bats-core`
+- Manual: [github.com/bats-core/bats-core](https://github.com/bats-core/bats-core)
+
 ## Credits
 
 Based on the original [Shunpo](https://github.com/egurapha/Shunpo) project by [Raphael Eguchi](https://github.com/egurapha). Zsh compatibility and additional improvements added using [Claude Code](https://claude.ai/code).

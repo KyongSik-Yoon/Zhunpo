@@ -11,7 +11,14 @@ setup() {
     setup_env
     printf '\n' | ./install.sh
     working_dir=$(pwd)
-    source ${SHUNPO_TEST_DIR}/home/.bashrc
+    
+    # Source appropriate RC file based on shell
+    if [ -n "$ZSH_VERSION" ]; then
+        source ${SHUNPO_TEST_DIR}/home/.zshrc
+    else
+        source ${SHUNPO_TEST_DIR}/home/.bashrc
+    fi
+    
     cd ${SHUNPO_TEST_DIR}
 }
 

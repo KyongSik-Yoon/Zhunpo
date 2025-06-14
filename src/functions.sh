@@ -40,7 +40,12 @@ function shunpo_interact_bookmarks() {
             return 1
         else
             if [[ $2 -lt $total_bookmarks ]]; then
-                shunpo_selected_dir="${bookmarks[$2]}"
+                # Handle zsh 1-based arrays vs bash 0-based arrays
+                if [ -n "$ZSH_VERSION" ]; then
+                    shunpo_selected_dir="${bookmarks[$(($2 + 1))]}"
+                else
+                    shunpo_selected_dir="${bookmarks[$2]}"
+                fi
                 tput cnorm
                 return 0
             else
@@ -80,7 +85,12 @@ function shunpo_interact_bookmarks() {
 
         # Display bookmarks for the current page.
         for ((i = start_index; i < end_index; i++)); do
-            echo -e "[${SHUNPO_BOLD}${SHUNPO_ORANGE}$((i - start_index))${SHUNPO_RESET}] ${bookmarks[i]}"
+            # Handle zsh 1-based arrays vs bash 0-based arrays
+            if [ -n "$ZSH_VERSION" ]; then
+                echo -e "[${SHUNPO_BOLD}${SHUNPO_ORANGE}$((i - start_index))${SHUNPO_RESET}] ${bookmarks[$((i + 1))]}"
+            else
+                echo -e "[${SHUNPO_BOLD}${SHUNPO_ORANGE}$((i - start_index))${SHUNPO_RESET}] ${bookmarks[i]}"
+            fi
         done
 
         if [ $last_page -gt 1 ]; then
@@ -110,7 +120,12 @@ function shunpo_interact_bookmarks() {
             # Process bookmark selection input.
             shunpo_selected_bookmark_index=$((current_page * max_per_page + input))
             if [[ $shunpo_selected_bookmark_index -lt $total_bookmarks ]]; then
-                shunpo_selected_dir="${bookmarks[$shunpo_selected_bookmark_index]}"
+                # Handle zsh 1-based arrays vs bash 0-based arrays
+                if [ -n "$ZSH_VERSION" ]; then
+                    shunpo_selected_dir="${bookmarks[$((shunpo_selected_bookmark_index + 1))]}"
+                else
+                    shunpo_selected_dir="${bookmarks[$shunpo_selected_bookmark_index]}"
+                fi
                 shunpo_clear_output
                 tput cnorm
                 return 0
