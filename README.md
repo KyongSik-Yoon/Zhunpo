@@ -7,8 +7,10 @@
 </div>
 
 ----
-Shunpo is a minimalist bash tool that tries to make directory navigation in terminal just a little bit faster by providing a simple system to manage bookmarks and jump to directories with only a few keystrokes.
-If you frequently need to use commands like `cd`, `pushd`, or `popd`, Shunpo is for you.  
+Shunpo is a minimalist shell tool that tries to make directory navigation in terminal just a little bit faster by providing a simple system to manage bookmarks and jump to directories with only a few keystrokes.
+If you frequently need to use commands like `cd`, `pushd`, or `popd`, Shunpo is for you.
+
+**New**: Now fully compatible with both Bash and Zsh! 🚀  
 
 ![Powered by 🍵](https://img.shields.io/badge/Powered%20by-%F0%9F%8D%B5-blue?style=flat-square)
 [![Ko-fi](https://img.shields.io/badge/Ko--fi-Buy%20me%20Tea-ff5f5f?logo=kofi&style=flat-square)](https://ko-fi.com/egurapha)
@@ -18,11 +20,24 @@ If you frequently need to use commands like `cd`, `pushd`, or `popd`, Shunpo is 
 
 Requirements
 ----
-Bash 3.2 or newer, or Zsh 5.0 or newer.
+- **Bash** 3.2 or newer, or
+- **Zsh** 5.0 or newer
+
+> **Note**: Zsh compatibility was added using [Claude Code](https://claude.ai/code) to ensure seamless functionality across both shells.
 
 Installation
 ----
-Run `install.sh && source ~/.bashrc` (for bash) or `install.sh && source ~/.zshrc` (for zsh). For nix, click [here](nix/NixREADME.md).
+The installation script automatically detects your shell and configures the appropriate RC file:
+
+```bash
+./install.sh
+```
+
+Then reload your shell configuration:
+- **Bash**: `source ~/.bashrc`
+- **Zsh**: `source ~/.zshrc`
+
+For nix installation, click [here](nix/NixREADME.md).
 
 Tutorial
 ----
@@ -52,4 +67,8 @@ Commands
 Uninstalling
 ----
 Run `uninstall.sh`
+
+## Credits
+
+Based on the original [Shunpo](https://github.com/egurapha/Shunpo) project by [Raphael Eguchi](https://github.com/egurapha). Zsh compatibility and additional improvements added using [Claude Code](https://claude.ai/code).
 
