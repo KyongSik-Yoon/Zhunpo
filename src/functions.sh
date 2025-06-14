@@ -88,7 +88,12 @@ function shunpo_interact_bookmarks() {
         fi
 
         # Read input to select bookmarks and cycle through pages.
-        read -rsn1 input
+        # Compatible read for both bash and zsh
+        if [ -n "$ZSH_VERSION" ]; then
+            read -rsk1 input
+        else
+            read -rsn1 input
+        fi
         if [[ $input == "n" ]]; then
             if [ $((current_page + 1)) -le $((last_page - 1)) ]; then
                 current_page=$((current_page + 1))
@@ -212,7 +217,12 @@ function shunpo_jump_to_parent_dir() {
         fi
 
         # Read and process user input.
-        read -rsn1 input
+        # Compatible read for both bash and zsh
+        if [ -n "$ZSH_VERSION" ]; then
+            read -rsk1 input
+        else
+            read -rsn1 input
+        fi
         if [[ $input == "n" ]]; then
             if [ $((current_page + 1)) -lt "$last_page" ]; then
                 current_page=$((current_page + 1))
@@ -282,8 +292,14 @@ function shunpo_jump_to_child_dir() {
     while true; do
         # Attempt to retrieve from cache.
         if cache_index=$(shunpo_is_cached "$selected_path"); then
-            # Use cached value.
-            IFS='|' read -r -a child_dirs <<<"${cache_values[$cache_index]}"
+            # Use cached value - compatible with both bash and zsh
+            if [ -n "$ZSH_VERSION" ]; then
+                # zsh array splitting
+                IFS='|' read -rA child_dirs <<<"${cache_values[$cache_index]}"
+            else
+                # bash array splitting
+                IFS='|' read -r -a child_dirs <<<"${cache_values[$cache_index]}"
+            fi
         else
             # Collect directories if not cached.
             child_dirs=()
@@ -354,7 +370,12 @@ function shunpo_jump_to_child_dir() {
         fi
 
         # Process input.
-        read -rsn1 input
+        # Compatible read for both bash and zsh
+        if [ -n "$ZSH_VERSION" ]; then
+            read -rsk1 input
+        else
+            read -rsn1 input
+        fi
         if [[ $input == "n" ]]; then
             if [ $((current_page + 1)) -lt "$last_page" ]; then
                 current_page=$((current_page + 1))
@@ -417,7 +438,14 @@ function shunpo_add_space() {
     total_lines=$(tput lines)
 
     # Fetch the current cursor row position using ANSI escape codes.
-    cursor_line=$(IFS=';' read -rsdR -p $'\033[6n' -a pos && echo "${pos[0]#*[}")
+    # Compatible with both bash and zsh
+    if [ -n "$ZSH_VERSION" ]; then
+        # zsh version
+        cursor_line=$(IFS=';' read -rsdR pos\?$'\033[6n' && echo "${pos[1]%%R*}")
+    else
+        # bash version
+        cursor_line=$(IFS=';' read -rsdR -p $'\033[6n' -a pos && echo "${pos[0]#*[}")
+    fi
 
     # Calculate lines from current position to bottom.
     lines_to_bottom=$((total_lines - cursor_line))

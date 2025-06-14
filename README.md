@@ -18,11 +18,11 @@ If you frequently need to use commands like `cd`, `pushd`, or `popd`, Shunpo is 
 
 Requirements
 ----
-Bash 3.2 or newer.
+Bash 3.2 or newer, or Zsh 5.0 or newer.
 
 Installation
 ----
-Run `install.sh && source ~/.bashrc`. For nix, click [here](nix/NixREADME.md).
+Run `install.sh && source ~/.bashrc` (for bash) or `install.sh && source ~/.zshrc` (for zsh). For nix, click [here](nix/NixREADME.md).
 
 Tutorial
 ----
